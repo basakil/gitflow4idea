@@ -55,7 +55,8 @@ public class GitInitLineHandler extends GitLineHandler {
             if (s.contains("name for production releases")) {
                 consoleWriter.showCommandLine(_initOptions.getProductionBranch());
 
-                writer.write(_initOptions.getProductionBranch());
+//                writer.write(_initOptions.getProductionBranch());
+                writer.write(BAConstants.PRODUCTION_BRANCH);
                 writer.write("\n");
                 writer.flush();
             }
@@ -63,7 +64,8 @@ public class GitInitLineHandler extends GitLineHandler {
             if (s.contains("name for \"next release\"")) {
                 consoleWriter.showCommandLine(_initOptions.getDevelopmentBranch());
 
-                writer.write(_initOptions.getDevelopmentBranch());
+//                writer.write(_initOptions.getDevelopmentBranch());
+                writer.write(BAConstants.DEVELOPMENT_BRANCH);
                 writer.write("\n");
                 writer.flush();
             }
@@ -71,42 +73,48 @@ public class GitInitLineHandler extends GitLineHandler {
             if (s.contains("Feature branches")) {
                 consoleWriter.showCommandLine(_initOptions.getFeaturePrefix());
 
-                writer.write(_initOptions.getFeaturePrefix());
+//                writer.write(_initOptions.getFeaturePrefix());
+                writer.write(BAConstants.FEATURE_PREFIX);
                 writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Bugfix branches")) {
                 consoleWriter.showCommandLine(_initOptions.getBugfixPrefix());
 
-                writer.write(_initOptions.getBugfixPrefix());
+//                writer.write(_initOptions.getBugfixPrefix());
+                writer.write(BAConstants.BUGFIX_PREFIX);
                 writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Release branches")) {
                 consoleWriter.showCommandLine(_initOptions.getReleasePrefix());
 
-                writer.write(_initOptions.getReleasePrefix());
+//                writer.write(_initOptions.getReleasePrefix());
+                writer.write(BAConstants.RELEASE_PREFIX);
                 writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Hotfix branches")) {
                 consoleWriter.showCommandLine(_initOptions.getHotfixPrefix());
 
-                writer.write(_initOptions.getHotfixPrefix());
+//                writer.write(_initOptions.getHotfixPrefix());
+                writer.write(BAConstants.HOTFIX_PREFIX);
                 writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Support branches")) {
                 consoleWriter.showCommandLine(_initOptions.getSupportPrefix());
 
-                writer.write(_initOptions.getSupportPrefix());
+//                writer.write(_initOptions.getSupportPrefix());
+                writer.write(BAConstants.SUPPORT_PREFIX);
                 writer.write("\n");
                 writer.flush();
             }
             if (s.contains("Version tag")) {
                 consoleWriter.showCommandLine(_initOptions.getVersionPrefix());
 
-                writer.write(_initOptions.getVersionPrefix());
+//                writer.write(_initOptions.getVersionPrefix());
+                writer.write(BAConstants.VERSION_PREFIX);
                 writer.write("\n");
                 writer.flush();
             }

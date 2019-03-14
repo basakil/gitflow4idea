@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 
 import git4idea.repo.GitRepository;
+import gitflow.BAConstants;
 import org.jetbrains.annotations.NotNull;
 
 import git4idea.commands.GitCommandResult;
@@ -56,6 +57,8 @@ public class StartFeatureAction extends GitflowAction {
     private GitCommandResult createFeatureBranch(String baseBranchName, String featureName) {
         GitflowErrorsListener errorListener = new GitflowErrorsListener(myProject);
         GitCommandResult result = myGitflow.startFeature(myRepo, featureName, baseBranchName, errorListener);
+
+        baseBranchName = BAConstants.DEVELOPMENT_BRANCH;
 
         if (result.success()) {
             String startedFeatureMessage = String.format("A new branch '%s%s' was created, based on '%s'", featurePrefix, featureName, baseBranchName);

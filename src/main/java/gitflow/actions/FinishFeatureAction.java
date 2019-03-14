@@ -45,12 +45,13 @@ public class FinishFeatureAction extends GitflowAction {
                 featureName = GitflowConfigUtil.getFeatureNameFromBranch(myProject, myRepo, currentBranchName);
             }
 
-            this.runAction(myProject, featureName);
+            this.runAction(myProject, featureName, e);
+
         }
 
     }
 
-    public void runAction(final Project project, final String featureName){
+    public void runAction(final Project project, final String featureName, final AnActionEvent anActionEvent){
         super.runAction(project, null, featureName, null);
 
         final GitflowErrorsListener errorLineHandler = new GitflowErrorsListener(myProject);
@@ -84,13 +85,20 @@ public class FinishFeatureAction extends GitflowAction {
             public void onSuccess() {
                 super.onSuccess();
 
+                boolean willDoSecondCall = false;
+
                 //merge conflicts if necessary
                 if (errorLineHandler.hasMergeError){
                     if (handleMerge()){
-                        that.runAction(project, featureName);
+                        willDoSecondCall = true;
+                        that.runAction(project, featureName, anActionEvent);
                         FinishFeatureAction completeFinishFeatureAction = new FinishFeatureAction(myRepo, featureName);
                     }
+                }
 
+                if (! willDoSecondCall) {
+                    StartFeatureAction startFeatureAction = new StartFeatureAction();
+                    startFeatureAction.actionPerformed(anActionEvent);
                 }
 
             }

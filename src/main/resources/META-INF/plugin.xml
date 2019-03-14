@@ -5,7 +5,7 @@
     <description>SET_BY_GRADLE</description>
     <version>SET_BY_GRADLE</version>
     <category>VCS Integration</category>
-    <vendor url="http://www.opherv.com">Opher Vishnia</vendor>
+    <vendor>Opher Vishnia and AoB.</vendor>
 
     <depends>com.intellij.modules.vcs</depends>
     <depends>com.intellij.tasks</depends>
@@ -15,20 +15,21 @@
 
     <actions>
         <action id="Gitflow.OpenGitflowPopup" class="gitflow.actions.OpenGitflowPopup"
-                text="Gitflow Operations Popup..."></action>
+                text="Safeflow Operations Popup..."></action>
 
         <action id="Gitflow.InitRepo" class="gitflow.actions.InitRepoAction"
-                text="Initialize Gitflow Repository"></action>
+                text="Initialize Safeflow Repository"></action>
 
         <action id="Gitflow.StartFeature" class="gitflow.actions.StartFeatureAction"
-                text="Gitflow: Start Feature..."></action>
+                text="Safeflow: Start Feature..."></action>
         <action id="Gitflow.FinishFeature" class="gitflow.actions.FinishFeatureAction"
-                text="Gitflow: Finish Feature..."></action>
+                text="Safeflow: Finish Feature..."></action>
         <action id="Gitflow.PublishFeature" class="gitflow.actions.PublishFeatureAction"
-                text="Gitflow: Publish Feature"></action>
+                text="Safeflow: Publish Feature"></action>
         <action id="Gitflow.TrackFeature" class="gitflow.actions.TrackFeatureAction"
-                text="Gitflow: Track Feature..."></action>
+                text="Safeflow: Track Feature..."></action>
 
+<!--
         <action id="Gitflow.StartRelease" class="gitflow.actions.StartReleaseAction"
                 text="Gitflow: Start Release..."></action>
         <action id="Gitflow.FinishRelease" class="gitflow.actions.FinishReleaseAction"
@@ -53,6 +54,8 @@
                 text="Gitflow: Publish Bugfix"></action>
         <action id="Gitflow.TrackBugfix" class="gitflow.actions.TrackBugfixAction"
                 text="Gitflow: Track Bugfix..."></action>
+
+        -->
     </actions>
 
     <project-components>
@@ -64,7 +67,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceInterface="gitflow.Gitflow" serviceImplementation="gitflow.GitflowImpl"/>
         <applicationService serviceInterface="gitflow.GitflowState" serviceImplementation="gitflow.GitflowState"></applicationService>
-        <projectConfigurable instance="gitflow.GitflowConfigurable"/>
+        <!--<projectConfigurable instance="gitflow.GitflowConfigurable"/>-->
         <tasks.dialogPanelProvider implementation="gitflow.ui.GitflowTaskDialogPanelProvider"/>
     </extensions>
 </idea-plugin>

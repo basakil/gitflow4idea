@@ -5,6 +5,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.CollectionComboBoxModel;
+import gitflow.BAConstants;
 import gitflow.GitflowInitOptions;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,6 +67,7 @@ public class GitflowInitOptionsDialog extends DialogWrapper {
     public GitflowInitOptions getOptions()
     {
         GitflowInitOptions options = new GitflowInitOptions();
+/*
 
         options.setUseDefaults(!useNonDefaultConfigurationCheckBox.isSelected());
         options.setProductionBranch((String) productionBranchComboBox.getSelectedItem());
@@ -76,6 +78,17 @@ public class GitflowInitOptionsDialog extends DialogWrapper {
         options.setBugfixPrefix(bugfixPrefixTextField.getText());
         options.setSupportPrefix(supportPrefixTextField.getText());
         options.setVersionPrefix(versionPrefixTextField.getText());
+
+*/
+        options.setUseDefaults(false);
+        options.setProductionBranch(BAConstants.PRODUCTION_BRANCH);
+        options.setDevelopmentBranch(BAConstants.DEVELOPMENT_BRANCH);
+        options.setFeaturePrefix(BAConstants.FEATURE_PREFIX);
+        options.setReleasePrefix(BAConstants.RELEASE_PREFIX);
+        options.setHotfixPrefix(BAConstants.HOTFIX_PREFIX);
+        options.setBugfixPrefix(BAConstants.BUGFIX_PREFIX);
+        options.setSupportPrefix(BAConstants.SUPPORT_PREFIX);
+        options.setVersionPrefix(BAConstants.VERSION_PREFIX);
 
         return options;
     }
