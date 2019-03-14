@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import git4idea.commands.*;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
+import gitflow.ui.NotifyUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Opher Vishnia / opherv.com / opherv@gmail.com
@@ -20,25 +22,36 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
     //we must use reflection to add this command, since the git4idea implementation doesn't expose it
     private GitCommand GitflowCommand() {
+
+        return GitCommand("flow");
+    }
+
+
+    private Method getAccesibleGitMethod() {
         Method m = null;
         try {
             m = GitCommand.class.getDeclaredMethod("write", String.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        //m.invoke(d);//exception java.lang.IllegalAccessException
-        m.setAccessible(true);//Abracadabra
 
+        m.setAccessible(true);
+
+        return m;
+    }
+
+    private GitCommand GitCommand(String arg) {
+        Method m = getAccesibleGitMethod();
         GitCommand command = null;
-
-        try {
-            command = (GitCommand) m.invoke(null, "flow");//now its ok
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        if (m != null) {
+            try {
+                command = (GitCommand) m.invoke(null, arg);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
-
         return command;
     }
 
@@ -93,6 +106,7 @@ public class GitflowImpl extends GitImpl implements Gitflow {
                                          @NotNull String featureName,
                                          @Nullable String baseBranch,
                                          @Nullable GitLineHandlerListener... listeners) {
+
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         h.setSilent(false);
 
@@ -113,9 +127,68 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return runCommand(h);
     }
 
+    private GitCommandResult runGitCommand(@NotNull GitRepository repository,
+                                           @Nullable GitLineHandlerListener[] listeners,
+                                           @NotNull String command,
+                                           @Nullable String ...params) {
+
+        GitCommand gitCommand = GitCommand(command);
+
+        final GitLineHandler gitHandler = new GitLineHandler(
+                repository.getProject(),
+                repository.getRoot(),
+                gitCommand,
+                new ArrayList<String>());
+
+        gitHandler.setSilent(false);
+        setUrl(gitHandler, repository);
+        for (String param:params) {
+            gitHandler.addParameters(param);
+        }
+
+        if (listeners != null) {
+            for (GitLineHandlerListener listener : listeners) {
+                gitHandler.addLineListener(listener);
+            }
+        }
+
+        return runCommand(gitHandler);
+    }
+
+    private GitCommandResult runGitCommandVisual(@NotNull GitRepository repository,
+                                                 @Nullable GitLineHandlerListener[] listeners,
+                                                 @NotNull String command,
+                                                 @Nullable String ...params) {
+
+        GitCommandResult gcr = runGitCommand(repository, listeners, command, params);
+
+        if (! gcr.success()) {
+            NotifyUtil.notifyError(repository.getProject(), "git " + command + " error", "Please have a look at the Version Control console for more details");
+        }
+
+        return gcr;
+    }
+
     public GitCommandResult finishFeature(@NotNull GitRepository repository,
                                           @NotNull String featureName,
                                           @Nullable GitLineHandlerListener... listeners) {
+
+        GitCommandResult gitCommandResult = null;
+        gitCommandResult = runGitCommandVisual(repository, listeners,"checkout", "develop");
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"pull", "origin", "develop");
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"checkout", "feature/"+featureName);
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
 
         setUrl(h, repository);
@@ -123,7 +196,6 @@ public class GitflowImpl extends GitImpl implements Gitflow {
 
         h.addParameters("feature");
         h.addParameters("finish");
-
 
         addOptionsCommand(h, repository.getProject(),"FEATURE_keepRemote");
         addOptionsCommand(h, repository.getProject(),"FEATURE_keepLocal");
@@ -137,13 +209,17 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         for (GitLineHandlerListener listener : listeners) {
             h.addLineListener(listener);
         }
-        return runCommand(h);
+
+        gitCommandResult = runCommand(h);
+
+        return gitCommandResult;
     }
 
 
     public GitCommandResult publishFeature(@NotNull GitRepository repository,
                                            @NotNull String featureName,
                                            @Nullable GitLineHandlerListener... listeners) {
+
         final GitLineHandler h = new GitLineHandler(repository.getProject(), repository.getRoot(), GitflowCommand());
         setUrl(h, repository);
         h.setSilent(false);
