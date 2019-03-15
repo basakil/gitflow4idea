@@ -77,12 +77,25 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         }
   */
 
-        gitCommandResult = runGitCommandVisual(repository, listeners,"fetch");
-        if (!gitCommandResult.success()) {
-            return gitCommandResult;
-        }
+        //does not pollute clients repo:
+//        gitCommandResult = runGitCommandVisual(repository, listeners,"fetch");
 
-        return gitCommandResult;
+        gitCommandResult = runGitCommandVisual(repository, listeners,"checkout", BAConstants.PRODUCTION_BRANCH);
+        if (!gitCommandResult.success()) {
+            gitCommandResult = runGitCommandVisual(repository, listeners,"checkout", "-b" , BAConstants.PRODUCTION_BRANCH);
+        }
+        gitCommandResult = runGitCommandVisual(repository, listeners,"pull", "origin", BAConstants.PRODUCTION_BRANCH);
+        gitCommandResult = runGitCommandVisual(repository, listeners,"push", "origin", BAConstants.PRODUCTION_BRANCH);
+
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"checkout", BAConstants.DEVELOPMENT_BRANCH);
+        if (!gitCommandResult.success()) {
+            gitCommandResult = runGitCommandVisual(repository, listeners,"checkout", "-b" , BAConstants.DEVELOPMENT_BRANCH);
+        }
+        gitCommandResult = runGitCommandVisual(repository, listeners,"pull", "origin", BAConstants.DEVELOPMENT_BRANCH);
+        gitCommandResult = runGitCommandVisual(repository, listeners,"push", "origin", BAConstants.DEVELOPMENT_BRANCH);
+
+        return newSuccessResult();
     }
 
     public GitCommandResult initRepo(@NotNull GitRepository repository,
@@ -307,6 +320,14 @@ public class GitflowImpl extends GitImpl implements Gitflow {
             add("not implemented");
         }}, new ArrayList<String>(){{
             add("not implemented");
+        }});
+    }
+
+    private GitCommandResult newSuccessResult() {
+        return new GitCommandResult(false, 0, new ArrayList<String>(){{
+            add("Success");
+        }}, new ArrayList<String>(){{
+            add("Completed Successfully");
         }});
     }
 

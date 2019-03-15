@@ -23,7 +23,7 @@ intellij {
 
 patchPluginXml {
     pluginId "Safeflow"
-    pluginDescription 'Safer Git Flow Integration'
+    pluginDescription 'Safer Gitflow Integration'
     version '0.0.3'
     sinceBuild '182.0'
     untilBuild '183.*'
