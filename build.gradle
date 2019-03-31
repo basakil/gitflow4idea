@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'safeflow4idea'
-version '0.0.3'
+version '0.0.4'
 
 sourceCompatibility = 1.6
 
@@ -24,7 +24,7 @@ intellij {
 patchPluginXml {
     pluginId "Safeflow"
     pluginDescription 'Safer Gitflow Integration'
-    version '0.0.3'
+    version '0.0.4'
     sinceBuild '182.0'
     untilBuild '183.*'
     changeNotes 'clipped configurations'

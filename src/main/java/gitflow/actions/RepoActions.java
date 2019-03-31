@@ -2,6 +2,7 @@ package gitflow.actions;
 
 import com.intellij.dvcs.ui.BranchActionGroup;
 import com.intellij.dvcs.ui.PopupElementWithAdditionalInfo;
+import com.intellij.ide.actions.SynchronizeAction;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -85,9 +86,11 @@ class RepoActions extends BranchActionGroup implements PopupElementWithAdditiona
                 actionList.add(new FinishFeatureAction(myRepo));
 
                 //can't publish feature if it's already published
-                if (branchUtil.isCurrentBranchPublished()==false){
+//                if (branchUtil.isCurrentBranchPublished()==false){
+                    //@TODO: add merge action here:
+                    actionList.add(new MergeFeatureAction(myRepo));
                     actionList.add(new PublishFeatureAction(myRepo));
-                }
+//                }
             }
 
             //make sure there's a feature to track, and that not all features are tracked

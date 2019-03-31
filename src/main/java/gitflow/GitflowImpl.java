@@ -257,6 +257,52 @@ public class GitflowImpl extends GitImpl implements Gitflow {
         return gitCommandResult;
     }
 
+    public GitCommandResult mergeFeature(@NotNull GitRepository repository,
+                                         @NotNull String featureName,
+                                         @Nullable GitLineHandlerListener... listeners) {
+
+        // a checkouts are needed cos pull/merge requests can theoritically result in conflicts..
+        GitCommandResult gitCommandResult = null;
+        gitCommandResult = runGitCommandVisual(repository, listeners,"checkout", BAConstants.DEVELOPMENT_BRANCH);
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        //@TODO: remove origin remarks:
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"pull", "origin", BAConstants.DEVELOPMENT_BRANCH);
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"merge", "--no-ff", BAConstants.FEATURE_PREFIX+featureName);
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"push", "origin", BAConstants.DEVELOPMENT_BRANCH);
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"checkout", BAConstants.FEATURE_PREFIX+featureName);
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"merge", "--no-ff", BAConstants.DEVELOPMENT_BRANCH);
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        gitCommandResult = runGitCommandVisual(repository, listeners,"push", "origin", BAConstants.FEATURE_PREFIX+featureName);
+        if (!gitCommandResult.success()) {
+            return gitCommandResult;
+        }
+
+        return gitCommandResult;
+    }
+
 
     public GitCommandResult publishFeature(@NotNull GitRepository repository,
                                            @NotNull String featureName,

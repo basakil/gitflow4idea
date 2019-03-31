@@ -1,0 +1,6 @@
+- commit dialog before finish/merge/pubish feature ??
+    - check doing publish before merge
+    - auto commit message
+    - do nothin if commit is cancelled..
+- ??
+- git4idea is 10yrs old... alternatives ???
